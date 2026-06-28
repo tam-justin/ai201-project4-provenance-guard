@@ -13,13 +13,14 @@ def init_db() -> None:
     with get_connection() as conn:
         conn.execute("""
             CREATE TABLE IF NOT EXISTS audit_log (
-                content_id  TEXT    PRIMARY KEY,
-                creator_id  TEXT    NOT NULL,
-                timestamp   TEXT    NOT NULL,
-                attribution TEXT,
-                confidence  REAL,
-                llm_score   REAL    NOT NULL,
-                status      TEXT    NOT NULL
+                content_id        TEXT    PRIMARY KEY,
+                creator_id        TEXT    NOT NULL,
+                timestamp         TEXT    NOT NULL,
+                attribution       TEXT,
+                llm_score         REAL    NOT NULL,
+                stylometric_score REAL    NOT NULL,
+                confidence        REAL    NOT NULL,
+                status            TEXT    NOT NULL
             )
         """)
 
@@ -37,17 +38,20 @@ def log_submission(
     creator_id: str,
     timestamp: str,
     llm_score: float,
+    stylometric_score: float,
+    confidence: float,
     attribution: str | None = None,
-    confidence: float | None = None,
     status: str = "classified",
 ) -> None:
     with get_connection() as conn:
         conn.execute(
             """
             INSERT INTO audit_log
-                (content_id, creator_id, timestamp, attribution, confidence, llm_score, status)
+                (content_id, creator_id, timestamp, attribution,
+                 llm_score, stylometric_score, confidence, status)
             VALUES
-                (?, ?, ?, ?, ?, ?, ?)
+                (?, ?, ?, ?, ?, ?, ?, ?)
             """,
-            (content_id, creator_id, timestamp, attribution, confidence, llm_score, status),
+            (content_id, creator_id, timestamp, attribution,
+             llm_score, stylometric_score, confidence, status),
         )

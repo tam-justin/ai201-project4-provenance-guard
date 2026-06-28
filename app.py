@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 from flask import Flask, request, jsonify
 from dotenv import load_dotenv
 
-from signals import llm_classifier
+from signals import llm_classifier, stylometric_heuristics, combine_signals
 from database import init_db, log_submission, get_log
 
 load_dotenv()
@@ -27,19 +27,25 @@ def submit():
     content_id = str(uuid.uuid4())
     now = datetime.now(timezone.utc)
     timestamp = now.strftime("%Y-%m-%dT%H:%M:%S.") + f"{now.microsecond // 1000:03d}Z"
+
     signal1_score = llm_classifier(data["text"])
+    signal2_score = stylometric_heuristics(data["text"])
+    confidence_score = combine_signals(signal1_score, signal2_score, data["text"])
 
     log_submission(
         content_id=content_id,
         creator_id=data["creator_id"],
         timestamp=timestamp,
         llm_score=signal1_score,
+        stylometric_score=signal2_score,
+        confidence=confidence_score,
     )
 
     return jsonify({
         "content_id": content_id,
         "signal1_score": signal1_score,
-        "confidence_score": None,
+        "signal2_score": signal2_score,
+        "confidence_score": confidence_score,
         "label": None,
     }), 200
 

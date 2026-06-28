@@ -22,7 +22,7 @@ We'll be using the following three heuristics to calculate the confidence score:
 
 - **Sentence length variance:** will capture how uniform or varied the sentence lengths are across the text.
 - **Vocabulary richness (type-token ratio):** will capture the ratio of unique words to total words.
-- **Punctuation patterns:** will capture the frequency and distribution of punctuation marks (commas, semicolons, etc.).
+- **Punctuation density:** will capture the frequency of formal punctuation marks (commas, semicolons, colons) per word. AI-generated text tends to use these marks more heavily than human writing, so higher density signals AI-like output.
 
 ---
 

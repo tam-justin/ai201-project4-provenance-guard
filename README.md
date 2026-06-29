@@ -1,7 +1,5 @@
 # Provenance Guard - README.md
 
----
-
 ## Architecture Overview
 
 ### Submission Workflow

@@ -1,6 +1,4 @@
-# Provenance Guard - [planning.md](http://planning.md)
-
----
+# Provenance Guard - planning.md
 
 ## Detection Signals
 
